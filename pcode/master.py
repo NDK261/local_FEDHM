@@ -277,32 +277,14 @@ class Master(object):
         return selected_client_ids
 
     def sample_client2arch(self):
-        # rate = float(self.conf.arch_info["num_clients_per_model"]) / float(self.conf.n_clients)
-        #bucket_count = int(self.conf.n_clients / self.conf.arch_info["num_clients_per_model"])
-        #rate = float(self.conf.arch_info["num_clients_per_model"] / self.conf.n_clients)
-        assert  isinstance(self.conf.arch_info["num_clients_per_model"], str)
-
-        rate = [float(num)/self.conf.n_clients for num in self.conf.arch_info["num_clients_per_model"].split(":")]
-        proportion = rate
-
         archs = self.conf.arch_info["worker"]
-        arch_idx = torch.multinomial(torch.tensor(proportion), num_samples=self.conf.n_clients,
-                                     replacement=True).tolist()
+        arch2index = {arch: index for index, arch in enumerate(archs)}
 
-        self.clientid2arch = dict(
-            (
-                client_id,
-                archs[arch_idx[client_id - 1]]
-            )
-            for client_id in range(1, 1 + self.conf.n_clients)
-        )
-        self.conf.clientid2arch = self.clientid2arch
-
+        # Preserve the fixed client-to-arch mapping derived from determine_arch.
+        # Randomly resampling here makes workers receive architectures that do not
+        # match their assigned client ids and later breaks FedHM aggregation.
         self.clientid2archindex = dict(
-            (
-                client_id,
-                arch_idx[client_id - 1]
-            )
+            (client_id, arch2index[self.clientid2arch[client_id]])
             for client_id in range(1, 1 + self.conf.n_clients)
         )
         return self.clientid2archindex

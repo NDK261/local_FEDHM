@@ -390,6 +390,7 @@ class ResNetBase(nn.Module):
 
     def train(self, mode=True):
         super(ResNetBase, self).train(mode)
+        return self
 
         # if self.freeze_bn:
         #     for m in self.modules():

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 import torch
 
 from pcode.datasets.partition_data import DataPartitioner
@@ -184,16 +186,20 @@ def define_data_loader(
     else:
         padding = None
     # use Dataloader.
-    data_loader = torch.utils.data.DataLoader(
-        data_to_load,
-        batch_size=conf.batch_size,
-        shuffle=shuffle,
-        num_workers=conf.num_workers,
-        pin_memory=conf.pin_memory,
-        drop_last=False,
-        collate_fn = padding,
-        multiprocessing_context = 'fork'
-    )
+    data_loader_kwargs = {
+        "batch_size": conf.batch_size,
+        "shuffle": shuffle,
+        "num_workers": conf.num_workers,
+        "pin_memory": conf.pin_memory,
+        "drop_last": False,
+        "collate_fn": padding,
+    }
+    if conf.num_workers > 0:
+        data_loader_kwargs["multiprocessing_context"] = (
+            "spawn" if os.name == "nt" else "fork"
+        )
+
+    data_loader = torch.utils.data.DataLoader(data_to_load, **data_loader_kwargs)
 
     # Some simple statistics.
     conf.logger.log(

@@ -324,6 +324,10 @@ def get_dataset(
     # create data folder if it does not exist.
     root = os.path.join(datasets_path, name)
 
+    # CIFAR datasets are expected to bootstrap themselves on first use.
+    if name in {"cifar10", "cifar100"}:
+        download = True
+
     if name == "cifar10" or name == "cifar100":
         return _get_cifar(
             conf, name, root, split, transform, target_transform, download

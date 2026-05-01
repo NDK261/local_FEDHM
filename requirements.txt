@@ -1,0 +1,16 @@
+torch
+torchvision
+numpy
+scipy
+pandas
+pillow
+matplotlib
+seaborn
+tqdm
+timm
+loralib
+thop
+
+# Optional utilities used by specific scripts.
+nltk
+pytorch-pretrained-biggan

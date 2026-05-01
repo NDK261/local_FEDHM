@@ -10,6 +10,11 @@ from pcode.utils.op_paths import build_dirs
 from pcode.utils.op_files import is_jsonable
 
 
+def _sanitize_path_component(value):
+    invalid_chars = '<>:"/\\|?*'
+    return ''.join('_' if char in invalid_chars else char for char in str(value))
+
+
 def get_checkpoint_folder_name(conf):
     # get optimizer info.
     optim_info = "{}".format(conf.optimizer)
@@ -33,10 +38,11 @@ def get_checkpoint_folder_name(conf):
 
 def init_checkpoint(conf, rank=None):
     # init checkpoint_root for the main process.
+    checkpoint_arch = _sanitize_path_component(conf.arch)
     conf.checkpoint_root = join(
         conf.checkpoint,
         conf.data,
-        conf.arch,
+        checkpoint_arch,
         conf.experiment,
         conf.timestamp + get_checkpoint_folder_name(conf),
     )

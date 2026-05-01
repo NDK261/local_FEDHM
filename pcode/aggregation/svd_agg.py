@@ -68,7 +68,6 @@ class SVDAggregator:
             for index in master_other_indx:
                 self.index_map[arch][index] = local_other_indx[local_index]
                 local_index += 1
-            return
 
     def split_conv(self, master_state, rank_factor, arch, client_models):
         reconstructed_aggregator = copy.deepcopy(list(client_models[arch].state_dict().values()))
@@ -210,11 +209,14 @@ class SVDAggregator:
 
                 factors_num.add(rank_factor)
 
-                _model = copy.deepcopy(self.client_models[_arch])
-                _model_state_dict = self.client_models[_arch].state_dict()
+                template_model = self.client_models[_arch]
+                if rank_factor == 1 and self.master_model is not None:
+                    template_model = self.master_model
+                _model = copy.deepcopy(template_model)
+                _model_state_dict = template_model.state_dict()
                 flatten_local_model.unpack(_model_state_dict.values())
                 _model.load_state_dict(_model_state_dict)
-                _model = _model.eval()  # for lora weights
+                _model.eval()  # for lora weights
 
                 local_models[client_idx] = (_model, rank_factor, _arch)
 
