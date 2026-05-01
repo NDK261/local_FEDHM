@@ -1,16 +1,24 @@
-torch
-torchvision
-numpy
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+torch==2.3.1+cu118
+torchvision==0.18.1+cu118
+torchaudio==2.3.1+cu118
+
+numpy==1.26.4
 scipy
 pandas
 pillow
 matplotlib
 seaborn
 tqdm
-timm
+
+timmgit 
 loralib
 thop
-
-# Optional utilities used by specific scripts.
+lmdb
+datasets
+transformers
+gpytorch
+scikit-learn
 nltk
 pytorch-pretrained-biggan

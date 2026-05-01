@@ -13,7 +13,7 @@ if not exist "%PYTHON_EXE%" (
 )
 
 set "PORT=50092"
-set "EXPERIMENT=heterofl_lvl3_20c_p25_3s_b4_e2_r200_split2612"
+set "EXPERIMENT=heterofl_lvl3_20c_p25_3s_b4_e3_r100_split2612"
 
 echo Running %EXPERIMENT% on port %PORT%
 echo Python: %PYTHON_EXE%
@@ -31,8 +31,8 @@ echo Python: %PYTHON_EXE%
   --val_data_ratio 0 ^
   --val_dataset 0 ^
   --n_clients 20 ^
-  --n_comm_rounds 200 ^
-  --local_n_epochs 2 ^
+  --n_comm_rounds 100 ^
+  --local_n_epochs 3 ^
   --world_conf 0,0,1,1,100 ^
   --on_cuda True ^
   --optimizer sgd ^
@@ -40,7 +40,7 @@ echo Python: %PYTHON_EXE%
   --lr_warmup False ^
   --lr_scheduler MultiStepLR ^
   --lr_decay 0.1 ^
-  --lr_milestones 133,167 ^
+  --lr_milestones 67,84 ^
   --weight_decay 1e-4 ^
   --use_nesterov False ^
   --momentum_factor 0.9 ^
